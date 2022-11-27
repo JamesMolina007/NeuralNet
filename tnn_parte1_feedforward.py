@@ -33,6 +33,7 @@ def main():
     print("Neural Network output:")
     for i in data:
         x1,x2 = i[0],i[1]
+        
         feed_forward(_net,torch.tensor([x1,x2], dtype=torch.float))
 
 

@@ -1,26 +1,16 @@
 import torch
 from sys import argv
 from NeuralNet import Net as NeuralNet
+from torch.utils.data import DataLoader
+from CustomDataset import CustomDataset as Dataset
 
 #def update_weights(Net, learning_rate = 0.01):
 #    for f in Net.parameters():
         #f.data.sub_(f.grad.data * learning_rate)
 
 def create_optimizer(Net, learning_rate = 0.01):
-
-    for f in Net.parameters():
-        print(f)
     optimizer = torch.optim.SGD(Net.parameters(), lr=learning_rate)
     return optimizer
-
-def read_data(datos_entrenamiento):
-    with open(datos_entrenamiento, "r") as f:
-        data = f.read().splitlines()    
-    #ignore first line
-    data = [x.split(",") for x in data]
-    data = data[1:]
-    data = [[float(x[0]),float(x[1]),float(x[2]),float(x[3])] for x in data]
-    return data
 
 def train_model():
     if len(argv) != 3:
@@ -34,28 +24,22 @@ def train_model():
         learning_rate = float(argv[3])
         number_neurons = int(argv[4])
         output_file = argv[5]
-    data = read_data(datos_entrenamiento)
+    
     Net = NeuralNet(number_neurons)
-    #print weights
-    for f in Net.parameters():
-        print(f)
     optimizer = create_optimizer(Net, learning_rate)
+    
+    dataset = Dataset(datos_entrenamiento)
+    train_dataloader = DataLoader(dataset, batch_size=2, shuffle=True)
 
     for epoch in range(max_epocas):
         if epoch % 100 == 0:
-            print("Epoch: ", epoch+1)
-        for i in data:
+            print("Epoch: ", epoch)
+        for (x, y) in train_dataloader:
             optimizer.zero_grad()
-            x1,x2 = i[0],i[1]
-            y1,y2 = i[2],i[3]
-            #print("x1: ", x1, " x2: ", x2, " y1: ", y1, " y2: ", y2)
-            output = Net.forward(torch.tensor([x1,x2], dtype=torch.float))
-            #print("output: ", output)
-            loss = torch.nn.functional.mse_loss(output, torch.tensor([y1,y2], dtype=torch.float))
+            output = Net.forward(x)
+            loss = torch.nn.functional.mse_loss(output, y)
             loss.backward()
-            #print("loss: ", loss)
             optimizer.step()
-            #update_weights(Net, learning_rate)
 
     Net.save_state(2)
 
