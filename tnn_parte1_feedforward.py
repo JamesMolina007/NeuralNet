@@ -23,7 +23,7 @@ def main():
     _net = NeuralNet()
     #print("[INFO] Weights loaded!")
     #print("[INFO] Saving state 1...")
-    _net.save_state(1)
+    _net.save_state("pesos_parte_1")
     #print("[INFO] State 1 saved!")
 
     archivo_de_pesos = argv[1]
@@ -33,7 +33,6 @@ def main():
     print("Neural Network output:")
     for i in data:
         x1,x2 = i[0],i[1]
-        
         feed_forward(_net,torch.tensor([x1,x2], dtype=torch.float))
 
 

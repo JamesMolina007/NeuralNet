@@ -1,5 +1,7 @@
+import os
 import torch
 from sys import argv
+import torch.nn as nn
 from NeuralNet import Net as NeuralNet
 from torch.utils.data import DataLoader
 from CustomDataset import CustomDataset as Dataset
@@ -30,18 +32,26 @@ def train_model():
     
     dataset = Dataset(datos_entrenamiento)
     train_dataloader = DataLoader(dataset, batch_size=2, shuffle=True)
-
     for epoch in range(max_epocas):
-        if epoch % 100 == 0:
-            print("Epoch: ", epoch)
+        print((epoch+1), end=',')
         for (x, y) in train_dataloader:
             optimizer.zero_grad()
             output = Net.forward(x)
             loss = torch.nn.functional.mse_loss(output, y)
             loss.backward()
             optimizer.step()
-
-    Net.save_state(2)
+        with torch.no_grad():
+            prom_loss = 0
+            for i in range(len(dataset)):
+                x, y = dataset[i]
+                output = Net.forward(x)
+                prom_loss += torch.nn.functional.mse_loss(output, y)
+            prom_loss = prom_loss / len(dataset)
+            print(prom_loss.item(), end=',')
+            print()
+    #####    
+        
+    Net.save_state("pesos_modelo_" + str(len(os.listdir("./Pesos/"))) + "_Epochs_" + str(max_epocas) + "_Neurons_" + str(number_neurons) + "_LearningRate_" + str(learning_rate))
 
 if __name__ == "__main__":
     train_model()

@@ -12,8 +12,8 @@ class Net(nn.Module):
         nn.init.xavier_normal_(self.fc1.weight)
         nn.init.xavier_normal_(self.fc2.weight)
 
-    def save_state(self, part):
-        torch.save(self.state_dict(), "./Pesos/pesos_parte_" + str(part) + ".pkl")
+    def save_state(self, name):
+        torch.save(self.state_dict(), "./Pesos/" + name + ".pkl")
 
     def forward(self, x):
         x = torch.sigmoid(self.fc1(x))
