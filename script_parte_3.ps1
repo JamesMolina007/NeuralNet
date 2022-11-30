@@ -1,0 +1,1 @@
+python tnn_parte3_entrenamiento.py ./Dataset/Train/training_data_very_large.csv 1000 ./Dataset/Validation/validation_data.csv 0.5 5 1 >> ./NLLLOSS/tnn_parte3_result.csv
