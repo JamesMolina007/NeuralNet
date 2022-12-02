@@ -49,7 +49,7 @@ def train_model():
             prom_loss_train += loss
             loss.backward()
             optimizer.step()
-            train_acc = torch.sum(output == y)
+            # train_acc = torch.sum(output == y)
         
         prom_loss_train = prom_loss_train / len(train_dataloader)
         print(prom_loss_train.item(), end=',')
@@ -81,11 +81,7 @@ def train_model():
             else:
                 epocas_sin_decremento = 0
             if (epocas_sin_decremento == max_epocas_sin_decremento):
-                break
-    """
-    accuracy (entrenamiento), promedio de F-1 por clase (entrenamiento), valor promedio
-del NLLLoss (validación), accuracy (validación), promedio de F-1 por clase (validación).
-    """        
+                break    
     Net.save_state("pesos_modelo_" + str(len(os.listdir("./Pesos/"))) + "_Epochs_" + str(max_epocas) + "_Neurons_" + str(number_neurons) + "_LearningRate_" + str(learning_rate))
 
 if __name__ == "__main__":
