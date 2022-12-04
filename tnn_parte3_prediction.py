@@ -1,6 +1,7 @@
 import torch
 from sys import argv
-import SimpleLayerNet as NeuralNet
+import SimpleLayerNet as SLN
+import MultiLayerNet as MLN
 from CustomDataset_parte3 import CustomDataset as Dataset
 import matplotlib.pyplot as plt
 
@@ -28,7 +29,16 @@ def main():
 
     tl = torch.load(model_file)
     neurons = len(tl['fc1.weight'])
-    model = NeuralNet.Net(neurons)
+    model = None
+    try:
+        tl['fc4.weight']
+        #model = MLN.Net(neurons)
+    except:
+        try:
+            tl['fc3.weight']
+            model = MLN.Net(neurons)
+        except:
+            model = SLN.Net(neurons)
     model.load_state_dict(torch.load(model_file))
     model.eval()
     dataset = Dataset(data)

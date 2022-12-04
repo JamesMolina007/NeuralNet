@@ -12,6 +12,8 @@ def create_optimizer(Net, learning_rate = 0.01):
     optimizer = torch.optim.SGD(Net.parameters(), lr=learning_rate)
     return optimizer
 
+
+
 def train_model():
     if len(argv) != 7:
         print("Usage: python tnn_parte3_entrenamiento.py <datos_entrenamiento> <max_epocas> <datos_validacion> <eps> <max_epocas_sin_decremento> <1|2|4>")
@@ -27,8 +29,9 @@ def train_model():
         learning_rate = float(argv[3])
         number_neurons = int(argv[4])
         output_file = argv[5]
+    
+    Net = MLN(number_neurons) if argv[6] == '2' else SLN(number_neurons)
 
-    Net = MLN(number_neurons) if argv[3] == '2' else SLN(number_neurons)
     optimizer = create_optimizer(Net, learning_rate)    
 
     dataset = Dataset(datos_entrenamiento)
@@ -73,8 +76,8 @@ def train_model():
             print()
 
             # Max epocassin decremento
-            if abs(prom_loss - previous_prom_loss) > eps:
-                pass
+            if abs(prom_loss - previous_prom_loss) > eps and previous_prom_loss != 0:
+                break
             previous_prom_loss = prom_loss
             if (prom_loss > min_val_per_epoch):
                 epocas_sin_decremento += 1
@@ -82,7 +85,7 @@ def train_model():
                 epocas_sin_decremento = 0
             if (epocas_sin_decremento == max_epocas_sin_decremento):
                 break    
-    Net.save_state("pesos_modelo_" + str(len(os.listdir("./Pesos/"))) + "_Epochs_" + str(max_epocas) + "_Neurons_" + str(number_neurons) + "_LearningRate_" + str(learning_rate))
+    Net.save_state("parte_3_L" + argv[6] + "_" + str(len(os.listdir("./Pesos/"))) + "_Epochs_" + str(max_epocas) + "_Neurons_" + str(number_neurons) + "_LearningRate_" + str(learning_rate))
 
 if __name__ == "__main__":
     train_model()

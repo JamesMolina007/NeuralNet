@@ -51,7 +51,7 @@ def train_model():
             print()
     #####    
         
-    Net.save_state("pesos_modelo_" + str(len(os.listdir("./Pesos/"))) + "_Epochs_" + str(max_epocas) + "_Neurons_" + str(number_neurons) + "_LearningRate_" + str(learning_rate))
+    Net.save_state("parte2_pesos_modelo_" + str(len(os.listdir("./Pesos/"))) + "_Epochs_" + str(max_epocas) + "_Neurons_" + str(number_neurons) + "_LearningRate_" + str(learning_rate))
 
 if __name__ == "__main__":
     train_model()

@@ -7,10 +7,10 @@ class Net(nn.Module):
 
     def __init__(self, neurons = 8):
         super(Net, self).__init__()
-        self.fc1 = nn.Linear(10,  neurons, bias = True) 
-        self.fc2 = nn.Linear(neurons,  neurons, bias = True) 
-        self.fc3 = nn.Linear(neurons, 4, bias = True)
-        self.m = nn.Softmax(dim=1)
+        self.fc1 = nn.Linear(15,  neurons) 
+        self.fc2 = nn.Linear(neurons,  neurons) 
+        self.fc3 = nn.Linear(neurons, 4)
+        self.m = nn.LogSoftmax()
         nn.init.xavier_normal_(self.fc1.weight)
         nn.init.xavier_normal_(self.fc2.weight)
         nn.init.xavier_normal_(self.fc3.weight)
@@ -21,6 +21,5 @@ class Net(nn.Module):
     def forward(self, x):
         x = torch.sigmoid(self.fc1(x))
         x = torch.sigmoid(self.fc2(x))
-        x = torch.sigmoid(self.fc3(x))
-        x = torch.sigmoid(self.m(x))
+        x = self.m(self.fc3(x))
         return x
