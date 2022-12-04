@@ -51,7 +51,7 @@ def train_model():
     min_val_per_epoch = 0.0
     epoch = 0
     
-    for epoch in range(50):
+    for epoch in range(1000):
         print((epoch+1), end=",")
         print("train", end=",")
         prom_loss_train = 0
