@@ -15,21 +15,26 @@ def read_data(datos_entrenamiento):
     data = [[float(x[0]),float(x[1])] for x in data]
     return data
 
+def printWeighs(model):
+    for param in model.parameters():
+        print(param.data.tolist())
+
+
 def main():
     if len(argv) != 2:
         print("Usage: python tnn_parte1_feedforward.py <archivo_de_pesos>")
         exit(1)
-    #print("[INFO] Loading weights...")
+    
     _net = NeuralNet()
-    #print("[INFO] Weights loaded!")
-    #print("[INFO] Saving state 1...")
+    print("Pesos aleatorios de la red: ")
+    printWeighs(_net)
+    
     _net.save_state("pesos_parte_1")
-    #print("[INFO] State 1 saved!")
 
     archivo_de_pesos = argv[1]
-    #print("[INFO] Loading weights...")
+    
     data = read_data(archivo_de_pesos)
-    #print("[INFO] Weights loaded!")
+
     print("Neural Network output:")
     for i in data:
         x1,x2 = i[0],i[1]

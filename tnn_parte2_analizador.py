@@ -40,7 +40,7 @@ def main():
     plt.plot(epochs_list, min_list, label="Min")
     plt.plot(epochs_list, mean_list, label="Mean")
     plt.legend()
-    plt.show()
+    plt.savefig("./Plots/MSE/MSE.png")
     
 
 if __name__ == '__main__':
