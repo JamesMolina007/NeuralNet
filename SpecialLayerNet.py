@@ -1,28 +1,33 @@
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 
 
 class Net(nn.Module):
 
     def __init__(self, neurons = 8):
         super(Net, self).__init__()
-        self.fc1 = nn.Linear(15,  neurons) 
-        self.fc2 = nn.Linear(neurons,  neurons) 
-        self.fc3 = nn.Linear(neurons,  neurons) 
-        self.fc4 = nn.Linear(neurons, 4)
-        self.m = nn.LogSoftmax()
-        nn.init.xavier_normal_(self.fc1.weight)
-        nn.init.xavier_normal_(self.fc2.weight)
-        nn.init.xavier_normal_(self.fc3.weight)
-        nn.init.xavier_normal_(self.fc4.weight)
+        self.layers = nn.Sequential(
+            nn.Linear(15,  neurons),
+            nn.BatchNorm1d(neurons),
+            nn.Sigmoid(),
+            nn.Linear(neurons,  neurons*2),
+            nn.BatchNorm1d(neurons*2),
+            nn.Sigmoid(),
+            nn.Linear(neurons*2,  neurons),
+            nn.BatchNorm1d(neurons),
+            nn.Sigmoid(),
+            nn.Linear(neurons,  4),
+            nn.LogSoftmax()
+        )
+        
+        def init_weights(m):
+            if isinstance(m, nn.Linear):
+                torch.nn.init.xavier_normal_(m.weight)
+                m.bias.data.fill_(0.01)
+        self.layers.apply(init_weights)
 
     def save_state(self, name):
         torch.save(self.state_dict(), "./Classification_Models/" + name + ".pkl")
 
     def forward(self, x):
-        x = torch.sigmoid(self.fc1(x))
-        x = torch.sigmoid(self.fc2(x))
-        x = torch.sigmoid(self.fc3(x))
-        x = self.m(self.fc4(x))
-        return x
+        return self.layers(x)

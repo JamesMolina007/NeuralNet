@@ -32,7 +32,7 @@ def main():
     model = None
     try:
         tl['fc4.weight']
-        #model = MLN.Net(neurons)
+        model = CLN.Net(neurons)
     except:
         try:
             tl['fc3.weight']

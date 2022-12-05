@@ -4,6 +4,7 @@ from sys import argv
 import torch.nn as nn
 from MultiLayerNet import Net as MLN
 from SimpleLayerNet import Net as SLN
+from SpecialLayerNet import Net as CLN
 from torch.utils.data import DataLoader
 from CustomDataset_parte3 import CustomDataset as Dataset
 
@@ -30,7 +31,8 @@ def train_model():
         number_neurons = int(argv[4])
         output_file = argv[5]
     
-    Net = MLN(number_neurons) if argv[6] == '2' else SLN(number_neurons)
+    numero_capas = int(argv[6])
+    Net = MLN(number_neurons) if numero_capas == 2 else SLN(number_neurons) if numero_capas == 1 else CLN(number_neurons)
 
     optimizer = create_optimizer(Net, learning_rate)    
 
