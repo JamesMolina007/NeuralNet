@@ -14,19 +14,20 @@ def create_optimizer(Net, learning_rate = 0.01):
     optimizer = torch.optim.SGD(Net.parameters(), lr=learning_rate)
     return optimizer
 
-def testing(model, data):
+def testing(model, data, matrixPath = ""):
     dataset = Dataset(data)
     test_dataloader = DataLoader(dataset, batch_size=10, shuffle=True)
     # mendys burger queen, rigos, wac ronalds,     
     Metrics = metrics()
     print("Neural Network output:")
+    print("test", end=",")
     for (x,y) in test_dataloader:
         out = model.forward(x)
         for i in range(10):
             Metrics.get_metrics(out[i].tolist(), y.tolist()[i])
         
     Metrics.print_all_metrics()
-    Metrics.plot_all_matrix()
+    Metrics.plot_all_matrix(matrixPath)
 
 def train_model():
     if len(argv) != 6:
@@ -111,7 +112,10 @@ def train_model():
                 break    
             previous_prom_loss = prom_loss_val
     Net.save_state("parte_3_L" + str(numero_capas) + "_" + str(len(os.listdir("./Pesos/"))) + "_Epochs_" + str(epoch) + "_Neurons_" + str(number_neurons) + "_LearningRate_" + str(learning_rate))
-    testing(Net, datos_prueba)
+    matrixName = "./Plots/" + str(numero_capas) + "-Capa-" + str(number_neurons) + "-" + "Neu"
+    if( str(numero_capas) == "4"):
+        matrixName = "./Plots/Red_Custom"
+    testing(Net, datos_prueba, matrixName)
 
 if __name__ == "__main__":
     train_model()

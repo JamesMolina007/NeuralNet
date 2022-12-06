@@ -93,7 +93,7 @@ class metrics:
         print("{:.4f}".format( (2 * (precision * recall) / (precision + recall) if (precision + recall) != 0 else 0)), end=",")
 
 
-    def plotMatrix(self, className, tp, fp, fn, tn):
+    def plotMatrix(self, className, tp, fp, fn, tn, path):
         plt.figure()
         plt.title(className)
         plt.xlabel("Predicted")
@@ -107,14 +107,14 @@ class metrics:
             for j in range(2):
                 plt.text(j, i, format([[tp, fp], [fn, tn]][i][j], 'd'), ha="center", va="center", color="black")
         #plt.show()
-        plt.savefig("./Matrix/" + className + ".png")
+        plt.savefig(path + "/" + className + ".png")
 
-    def plot_matrix(self, clase):
-        self.plotMatrix(clase, self.cadena_dict[clase]['tp'], self.cadena_dict[clase]['fp'], self.cadena_dict[clase]['fn'], self.cadena_dict[clase]['tn'])
+    def plot_matrix(self, clase, path):
+        self.plotMatrix(clase, self.cadena_dict[clase]['tp'], self.cadena_dict[clase]['fp'], self.cadena_dict[clase]['fn'], self.cadena_dict[clase]['tn'], path)
 
-    def plot_all_matrix(self):
+    def plot_all_matrix(self, path):
         for clase in self.cadena_dict:
-            self.plot_matrix(clase)
+            self.plot_matrix(clase, path)
         
     def print_all_metrics(self):
         for clase in self.cadena_dict:

@@ -1,8 +1,8 @@
 import os
+import numpy as np
 import pandas as pd
 from sys import argv
 import matplotlib.pyplot as plt
-
 
 
 def save_plot(className, epochs_list, val1, lbl1, lbl2, val2, train = False, hayVal = False):
@@ -20,6 +20,29 @@ def save_plot(className, epochs_list, val1, lbl1, lbl2, val2, train = False, hay
     metrics = "F1Acc_" if hayVal else "NLLLOSS_"
     plt.savefig(output_folder + "/" + metrics + className + type + ".png")
 
+def save_bar_plot(list):
+    list = [float(i) for i in list]
+    output_folder = argv[2]
+    metrics = pd.DataFrame(
+        {'F1': [list[1],list[3],list[5],list[7]],
+        'Accuracy': [list[0],list[2],list[5],list[6]]}, 
+        index=['Mendys', 'Burger Queen', 'Rigos', 'WAC Ronalds']
+    )
+
+    n = len(metrics.index)
+    width = 0.25
+    x = np.arange(n)
+    
+    plt.clf()
+    plt.xlabel("Class")
+    plt.ylabel("Values")
+    plt.bar(x - width, metrics.Accuracy, width=width, label='Accuracy')
+    plt.bar(x, metrics.F1, width=width, label='F1-Score')
+    plt.xticks(x, ['Mendys', 'Burger Queen', 'Rigos', 'Wac Ronalds'])
+    plt.legend(loc='best')
+    plt.savefig(output_folder + "/F1ACC_Testing.png")
+
+
 def main():
 
     if len(argv) != 3:
@@ -27,6 +50,10 @@ def main():
         exit(1)
     data_name = argv[1]
     df = pd.read_csv(data_name, index_col=0, header=None, encoding='utf_16_le')
+
+    #get last index row
+    testing_results = df.iloc[-1:].values.tolist()[0]
+    save_bar_plot(testing_results)
     df = df.drop(df.columns[[-1]], axis=1)
     
     epochs = int((df.shape[0] - 2)/2)
